@@ -18,7 +18,7 @@ import scala.concurrent.{ExecutionContext, Future}
 case class GitHubDAO @Inject()(wsClient: WSClient,
                                conf: Configuration)(implicit ec: ExecutionContext){
 
-  def urlBase: String = conf.get[String]("url.github")
+  def urlBase: String = conf.getOptional[String]("url.github").getOrElse("https://api.github.com")
 
   def parallel(fSeq: Seq[Future[JsValue]]): Future[Seq[JsValue]] = {
      Future.sequence(fSeq).map(value => value)

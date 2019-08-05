@@ -5,13 +5,14 @@ import play.api.libs.json.{Json, OFormat}
 
 case class MediaType(title: String,
                      country: String,
-                     year: String,
-                     genre: String,
-                     ranking: String,
+                     year: Int,
+                     genre: Seq[String],
+                     ranking: Int,
                      original_title: Option[String] = None,
                      french_release: Option[String] = None,
                      synopsis: Option[String] = None) {
-  require(title.length < 10)
+  require(title.length < 250)
+  require(country.matches("[A-Z]{3}"))
 }
 
 object MediaTypeFormatter {
