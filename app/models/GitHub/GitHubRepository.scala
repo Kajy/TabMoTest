@@ -1,4 +1,4 @@
-package models
+package models.GitHub
 
 import play.api.libs.json._
 

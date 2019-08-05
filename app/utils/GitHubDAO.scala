@@ -1,17 +1,14 @@
 package utils
 
-import java.text.SimpleDateFormat
-import java.time.{LocalDate, LocalTime}
-import java.time.format.DateTimeFormatter
-import java.util.Calendar
+import java.time.LocalDate
 
-import akka.actor.Status.Success
 import javax.inject._
-import models.{GitHubCommit, GitHubIssues, GitHubRepository, GitHubUser}
-import models.GitHubRepositoryFormatter._
-import models.GitHubCommitFormatter._
-import models.GitHubUserFormatter._
-import models.GitHubIssuesFormatter._
+import models.GitHub.{GitHubCommit, GitHubIssues, GitHubRepository, GitHubUser}
+import models.GitHub.GitHubRepositoryFormatter._
+import models.GitHub.GitHubCommitFormatter._
+import models.GitHub.GitHubUserFormatter._
+import models.GitHub.GitHubIssuesFormatter._
+import models.GitHub.{GitHubIssues, GitHubRepository, GitHubUser}
 import play.api.Configuration
 import play.api.libs.json.{JsArray, JsValue}
 import play.api.libs.ws.{WSClient, WSResponse}
@@ -53,11 +50,10 @@ case class GitHubDAO @Inject()(wsClient: WSClient,
     })
   }
 
-  def getIssuesByRepo(user: String, repos: String): Future[Seq[GitHubIssues]] = {
-    val formatterDate = new SimpleDateFormat("yyyy-MM-dd")
-    val date =  LocalDate.parse(formatterDate.format(Calendar.getInstance.getTime)).minusDays(90).toString
-    println(date)
-    wsClient.url(s"$urlBase/repos/$user/$repos/issues?state=all&since=$date").get.map( res => {
+  def getIssuesByRepo(user: String, repos: String, until: LocalDate): Future[Seq[GitHubIssues]] = {
+    wsClient.url(s"$urlBase/repos/$user/$repos/issues?state=all&since=${until.toString}").get.map( res => {
+      if (res.status == 404)
+        throw new Exception(res.json.toString)
       res.json.as[JsArray].value.map(commit => commit.as[GitHubIssues])
     })
   }

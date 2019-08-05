@@ -1,4 +1,4 @@
-name := "untitled"
+name := "TabMoTest"
  
 version := "1.0" 
       

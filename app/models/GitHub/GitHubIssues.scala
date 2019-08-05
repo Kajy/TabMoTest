@@ -1,6 +1,5 @@
-package models
+package models.GitHub
 
-import org.joda.time.DateTime
 import play.api.libs.json._
 
 case class GitHubIssues(id: Int,

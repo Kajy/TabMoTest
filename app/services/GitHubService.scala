@@ -1,7 +1,11 @@
 package services
 
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+
 import javax.inject.Inject
-import models.GitHubIssuesFormatter
 import play.api.libs.json._
 import utils.GitHubDAO
 
@@ -37,9 +41,15 @@ case class GitHubService @Inject()(gitHubDAO: GitHubDAO)(implicit ec: ExecutionC
     })
   }
 
-  def getIssuesByRepos(user: String, repos: String): Future[JsValue] = {
-    gitHubDAO.getIssuesByRepo(user, repos).map(res => {
-      JsArray(res.map(value => Json.toJson(value)(GitHubIssuesFormatter.gitHubIssuesFormat)))
+
+  def getIssuesByRepos(user: String, repos: String, until: Int): Future[JsValue] = {
+    val formatterDate = new SimpleDateFormat("yyyy-MM-dd")
+    val dateFrom =  LocalDate.parse(formatterDate.format(Calendar.getInstance.getTime)).minusDays(until)
+    val dateUntil =  LocalDate.parse(formatterDate.format(Calendar.getInstance.getTime))
+    val days =      dateFrom.toEpochDay.until(dateUntil.toEpochDay).map(LocalDate.ofEpochDay)
+
+    gitHubDAO.getIssuesByRepo(user, repos, dateFrom).map(res => {
+      JsObject(days.map(day => (day.toString, JsNumber(res.count(issue => LocalDate.parse(issue.created_at.substring(0, 10), DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString == day.toString)))))
     })
   }
 }

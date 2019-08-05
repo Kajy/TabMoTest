@@ -21,7 +21,7 @@ class GitHubController @Inject()(cc: ControllerComponents,
     gitHubService.getMostImportantCommitterByRepos(user, repos).map (res => Ok(res))
   }
 
-  def getUserClass(user: String, repos: String): Action[AnyContent] = Action.async {
-    gitHubService.getIssuesByRepos(user, repos).map(res => Ok(res))
+  def getIssuesStats(user: String, repos: String, until: Int = 30): Action[AnyContent] = Action.async {
+    gitHubService.getIssuesByRepos(user, repos, until).map(res => Ok(res))
   }
 }
