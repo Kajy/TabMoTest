@@ -10,8 +10,8 @@ class MediaDAO @Inject()(implicit ec: ExecutionContext) {
 
   var mediaData: Seq[MediaType] =  Seq.empty
 
-  def get: Future[Option[MediaType]] = {
-    Future { mediaData.headOption }
+  def get: Seq[MediaType] = {
+    mediaData
   }
 
   def put(newMedia: MediaType) = {

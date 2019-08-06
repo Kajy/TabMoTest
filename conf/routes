@@ -3,7 +3,7 @@
 
 GET     /                                       controllers.HomeController.index
 
-GET     /media                                  controllers.MediaController.getMedia
+GET     /media                                  controllers.MediaController.getMedia(genre: Option[String])
 PUT     /media                                  controllers.MediaController.putMedia
 
 GET     /github/user/:user/languages            controllers.GitHubController.getAllLanguagesByRepos(user: String)
