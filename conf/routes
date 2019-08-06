@@ -6,6 +6,8 @@ GET     /                                       controllers.HomeController.index
 GET     /media                                  controllers.MediaController.getMedia(genre: Option[String])
 PUT     /media                                  controllers.MediaController.putMedia
 
+GET     /media/years                            controllers.MediaController.getMediaByYear
+
 GET     /github/user/:user/languages            controllers.GitHubController.getAllLanguagesByRepos(user: String)
 GET     /github/repos/:user/:repos/commiters    controllers.GitHubController.getMostImportantCommiterByRepos(user: String, repos: String)
 GET     /github/repos/:user/:repos/issues       controllers.GitHubController.getIssuesStats(user: String, repos: String, until: Int ?=30)

@@ -21,8 +21,12 @@ class MediaController @Inject()(cc: ControllerComponents,
 
   def putMedia: Action[AnyContent] = Action.async { request =>
     mediaService.putMedia(request.body.asJson).map( {
-        case Right(ok) => Ok(ok)
-        case Left(ko) => NotFound(ko)
+        case Right(ok) => Created(ok)
+        case Left(ko) => BadRequest(ko)
       })
+  }
+
+  def getMediaByYear: Action[AnyContent] = Action.async {
+    mediaService.getMediaByYear.map(Ok(_))
   }
 }
