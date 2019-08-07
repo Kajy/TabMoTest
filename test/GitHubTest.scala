@@ -1,6 +1,7 @@
 import org.scalatest._
 
 
+@Ignore
 class GitHubTest extends BaseTest {
 
 

@@ -26,9 +26,16 @@ case class MediaService @Inject()(mediaDAO: MediaDAO)(implicit ec: ExecutionCont
   def putMedia(maybeMedia: Option[JsValue]): Future[Either[JsValue, JsValue]] = {
     maybeMedia match {
       case Some(media) => {
-        val newMedia = media.as[MediaType]
-        mediaDAO.put(newMedia)
-        Future { Right(JsString("Media uploaded !"))}
+        try {
+          val newMedia = media.as[MediaType]
+          mediaDAO.put(newMedia)
+          Future {
+            Right(JsString("Media uploaded !"))
+          }
+        }
+        catch {
+          case ex: IllegalArgumentException => Future { Left(JsString(ex.getMessage)) }
+        }
       }
       case None => Future { Left(JsString("Error no body")) }
     }
