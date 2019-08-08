@@ -30,12 +30,16 @@ case class GitHubDAO @Inject()(wsClient: WSClient,
 
   def getUserInfos(user: String): Future[GitHubUser] = {
     wsClient.url(s"$urlBase/users/$user").get.map( res => {
+      if (res.status == 404)
+        throw new Exception(res.json.toString)
       res.json.as[GitHubUser]
     })
   }
 
   def getUserRepos(user: String): Future[Seq[GitHubRepository]] = {
     wsClient.url(s"$urlBase/users/$user/repos").get.map( res => {
+      if (res.status == 404)
+        throw new Exception(res.json.toString)
       res.json.as[JsArray].value.map(repo => repo.as[GitHubRepository])
     })
   }
@@ -46,6 +50,8 @@ case class GitHubDAO @Inject()(wsClient: WSClient,
 
   def getCommitsByRepo(user: String, repos: String): Future[Seq[GitHubCommit]] = {
     wsClient.url(s"$urlBase/repos/$user/$repos/commits").get.map( res => {
+      if (res.status == 404)
+        throw new Exception(res.json.toString)
       res.json.as[JsArray].value.map(commit => commit.as[GitHubCommit])
     })
   }
